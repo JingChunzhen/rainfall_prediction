@@ -25,7 +25,7 @@ def maxpool2d(x, k=5):
 # get 1000 final node for convolutional layer
 
 
-def conv_process(x, weights_conv, bias, dropout):
+def conv_process(x, weights_conv, biases_conv, dropout):
     x = conv2d(x, weights_conv['w1'], biases_conv['b1'], 1)
     x = maxpool2d(x)
     x = conv2d(x, weights_conv['w2'], biases_conv['b2'], 1)
@@ -44,24 +44,3 @@ def lstm_process(x, weights_lstm, biases_lstm):
     lstm_cell = rnn.BasicLSTMCell(128, forget_bias=1.0)
     outputs, states = rnn.static_rnn(lstm_cell, inputs=x, dtype='float')
     return tf.add(tf.matmul(outputs[-1], weights_lstm['out']), biases_lstm['out'])
-
-
-weights_conv = {
-    'w1': tf.Variable(tf.random_normal([5, 5, 4, 1024])),  # after maxpool2d
-    'w2': tf.Variable(tf.random_normal([5, 5, 1024, 512])),
-    'wf': tf.Variable(tf.random_normal([5 * 5 * 512, 1000]))
-}
-
-biases_conv = {
-    'b1': tf.Variable(tf.random_normal([1024])),
-    'b2': tf.Variable(tf.random_normal([512])),
-    'bf': tf.Variable(tf.random_normal([1000]))
-}
-
-weights_lstm = {
-    'out': tf.Variable(tf.random_normal([128, 1]))
-}
-
-biases_lstm = {
-    'out': tf.Variable(tf.random_normal([1]))
-}
